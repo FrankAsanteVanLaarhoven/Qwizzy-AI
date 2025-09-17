@@ -21,6 +21,10 @@ from PIL import Image
 import base64
 import io
 from flask import Flask, render_template_string, jsonify, request
+try:
+    from flask_cors import CORS  # type: ignore
+except Exception:
+    CORS = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -61,10 +65,17 @@ class IntegratedMainPlatform:
         
         # Network info
         self.local_ip = self.get_local_ip()
-        self.web_port = 8000
+        # Bind to dynamic port in cloud providers (Render/Railway), default 8000 locally
+        self.web_port = int(os.getenv('PORT', '8000'))
         
         # Web server setup
         self.app = Flask(__name__)
+        # Enable permissive CORS in cloud to allow frontends on different origins
+        if CORS is not None:
+            try:
+                CORS(self.app, resources={r"/*": {"origins": "*"}})
+            except Exception:
+                pass
         self.setup_web_routes()
         
         # Curated paper references for Dr. Bo Wei and related work
@@ -342,14 +353,23 @@ class IntegratedMainPlatform:
         def check_microphone():
             """Check microphone permissions and availability"""
             try:
-                # Test microphone access
-                with self.microphone as source:
-                    self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                # In cloud deployments there is no server-side microphone.
+                # Honor CLOUD_DEPLOYMENT env var to skip server mic access and rely on client-side getUserMedia.
+                if os.getenv('CLOUD_DEPLOYMENT', '0') == '1':
                     return jsonify({
                         'success': True,
-                        'message': 'Microphone access granted and working',
-                        'microphone_available': True
+                        'message': 'Backend reachable. Use browser getUserMedia() for mic permission.',
+                        'microphone_available': True,
+                        'client_side': True
                     })
+                # Local environment: test microphone access
+                with self.microphone as source:
+                    self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                return jsonify({
+                    'success': True,
+                    'message': 'Microphone access granted and working',
+                    'microphone_available': True
+                })
             except Exception as e:
                 return jsonify({
                     'success': False,
