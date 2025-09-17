@@ -1179,6 +1179,7 @@ class IntegratedMainPlatform:
             padding: 0 !important;
             margin: 0 !important;
             overflow: hidden;
+            flex: 0 0 0 !important;
         }
 
         .sidebar-toggle {
@@ -1224,20 +1225,22 @@ class IntegratedMainPlatform:
         }
 
         .main-content.expanded {
-            flex: 0 0 100%;
-            max-width: 100%;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
         }
 
         /* Floating sidebar when collapsed */
         .sidebar-panel.collapsed .card {
-            position: fixed;
-            top: 50%;
-            left: 20px;
-            transform: translateY(-50%);
-            width: 300px;
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
+            position: fixed !important;
+            top: 50% !important;
+            left: 20px !important;
+            transform: translateY(-50%) !important;
+            width: 300px !important;
+            z-index: 1000 !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            border-radius: 15px !important;
+            display: block !important;
         }
 
         .sidebar-panel.collapsed .card-header {
