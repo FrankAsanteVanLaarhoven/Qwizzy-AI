@@ -1165,6 +1165,98 @@ class IntegratedMainPlatform:
             line-height: 1.4;
         }
 
+        /* Collapsible Sidebar Styles */
+        .sidebar-panel {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar-panel.collapsed {
+            width: 0 !important;
+            min-width: 0 !important;
+            max-width: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            transform: translateY(-50%);
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .sidebar-panel.collapsed .sidebar-toggle {
+            right: -15px;
+        }
+
+        .sidebar-panel.collapsed .sidebar-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .main-content {
+            transition: all 0.3s ease;
+        }
+
+        .main-content.expanded {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Floating sidebar when collapsed */
+        .sidebar-panel.collapsed .card {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            width: 300px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+        }
+
+        .sidebar-panel.collapsed .card-header {
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar-panel.collapsed .card {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                transform: none;
+                width: auto;
+            }
+            
+            .sidebar-toggle {
+                right: -12px;
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+        }
+
         /* Countdown Clock Styles */
         .countdown-container {
             position: absolute;
@@ -1349,10 +1441,13 @@ class IntegratedMainPlatform:
             <!-- Research Tab -->
             <div class="tab-pane fade" id="research" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 sidebar-panel">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-cog"></i> Research Configuration
+                                <button class="sidebar-toggle" title="Collapse Sidebar">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
                             </div>
                             <div class="card-body">
                                 <form id="researchForm">
@@ -1380,7 +1475,7 @@ class IntegratedMainPlatform:
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 main-content">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-chart-line"></i> Research Results
@@ -1401,10 +1496,13 @@ class IntegratedMainPlatform:
             <!-- Avatar Tab -->
             <div class="tab-pane fade" id="avatar" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 sidebar-panel">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-cog"></i> Avatar Configuration
+                                <button class="sidebar-toggle" title="Collapse Sidebar">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
                             </div>
                             <div class="card-body">
                                 <form id="avatarForm">
@@ -1437,7 +1535,7 @@ class IntegratedMainPlatform:
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 main-content">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-comments"></i> Avatar Interview Session
@@ -1458,11 +1556,14 @@ class IntegratedMainPlatform:
             <!-- Teleprompter Tab -->
             <div class="tab-pane fade show active" id="teleprompter" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 sidebar-panel" id="sidebarPanel">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-cog"></i> Live Interview Controls
                                 <span id="liveStatus" class="status-indicator offline"><span class="dot"></span>Offline</span>
+                                <button class="sidebar-toggle" id="sidebarToggle" title="Collapse Sidebar">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
@@ -1496,7 +1597,7 @@ class IntegratedMainPlatform:
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8 main-content" id="mainContent">
                         <div class="card">
                             <div class="card-header">
                                 <i class="fas fa-broadcast-tower"></i> Live Interview Assistance
@@ -1702,6 +1803,9 @@ class IntegratedMainPlatform:
         // Instant suggestions variables
         let instantSuggestionsEnabled = true;
         let suggestionsDisplay = null;
+        
+        // Sidebar collapse variables
+        let sidebarCollapsed = false;
 
         // Teleprompter navigation helpers
         function tpShow(sectionId) {
@@ -1935,6 +2039,44 @@ class IntegratedMainPlatform:
                     }
                 }
             });
+        }
+
+        // Sidebar collapse functions
+        function toggleSidebar() {
+            const sidebarPanels = document.querySelectorAll('.sidebar-panel');
+            const mainContents = document.querySelectorAll('.main-content');
+            
+            sidebarCollapsed = !sidebarCollapsed;
+            
+            if (sidebarCollapsed) {
+                sidebarPanels.forEach(panel => panel.classList.add('collapsed'));
+                mainContents.forEach(content => content.classList.add('expanded'));
+                updateStatus('Sidebar collapsed - more screen space available');
+            } else {
+                sidebarPanels.forEach(panel => panel.classList.remove('collapsed'));
+                mainContents.forEach(content => content.classList.remove('expanded'));
+                updateStatus('Sidebar expanded');
+            }
+            
+            // Save state to localStorage
+            localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+        }
+
+        function bindSidebarControls() {
+            // Bind all sidebar toggle buttons
+            document.querySelectorAll('.sidebar-toggle').forEach(button => {
+                button.addEventListener('click', toggleSidebar);
+            });
+            
+            // Restore sidebar state from localStorage
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                sidebarCollapsed = true;
+                const sidebarPanels = document.querySelectorAll('.sidebar-panel');
+                const mainContents = document.querySelectorAll('.main-content');
+                sidebarPanels.forEach(panel => panel.classList.add('collapsed'));
+                mainContents.forEach(content => content.classList.add('expanded'));
+            }
         }
 
         // Helpers for button state and status indicator
@@ -2359,6 +2501,7 @@ class IntegratedMainPlatform:
             bindTeleprompterControls();
             bindCountdownControls();
             bindInstantSuggestionsControls();
+            bindSidebarControls();
             updateCountdownDisplay(); // Initialize countdown display
             showInstantSuggestions(); // Show instant suggestions by default
             document.getElementById('tpCoreBtn')?.addEventListener('click', () => tpShow('tpCore'));
