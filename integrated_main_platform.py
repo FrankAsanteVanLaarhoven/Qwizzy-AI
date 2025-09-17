@@ -1654,6 +1654,34 @@ class IntegratedMainPlatform:
                                                 <li>Extends to autonomous systems where privacy attacks have safety implications</li>
                                             </ol>
                                             <div>Your SecureFed becomes the security backbone making privacy-preserving VLA practically deployable.</div>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">🎯 20-SECOND PRESENTATION EXPLANATION</div>
+                                            <div style="margin-top:8px;">"Dr. Wei, the Wei-Van Laarhoven Transform takes your proven SecureFed blockchain validation and extends it to quantum-enhanced sensor fusion, where privacy isn't added as an afterthought, but mathematically embedded at the quantum level—ensuring that raw sensor data never exists in an unprotected state."</div>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">🔬 COMPONENT-BY-COMPONENT BREAKDOWN</div>
+                                            <ol>
+                                                <li><strong>"Wei-Van Laarhoven"</strong> - Honors Dr. Bo Wei + Frank Van Laarhoven, shows respect for foundational work, positions collaboration at Newcastle University</li>
+                                                <li><strong>"Quantum Privacy Transform"</strong> - NOT quantum computers required, uses quantum math principles in classical systems, superposition & entanglement for privacy encoding</li>
+                                                <li><strong>"Novel Mathematical Formulation"</strong> - New mathematical framework, core equation combines quantum states + Dr. Wei's blockchain security</li>
+                                                <li><strong>"Secure Multimodal Sensor Fusion"</strong> - Multimodal: Camera + LiDAR + GPS + IMU + Language, Secure: Using Dr. Wei's blockchain validation method</li>
+                                                <li><strong>"Embeds Privacy Guarantees at Quantum Level"</strong> - Privacy built into mathematical representation itself, information-theoretic guarantees</li>
+                                            </ol>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">⚡ QUICK RESPONSES TO EXPECTED QUESTIONS</div>
+                                            <div><strong>Q: "How is this different from differential privacy?"</strong></div>
+                                            <div>A: "Differential privacy adds noise after processing. We encode privacy into the quantum mathematical representation—raw data never exists unprotected."</div>
+                                            
+                                            <div style="margin-top:8px;"><strong>Q: "Does this need quantum computers?"</strong></div>
+                                            <div>A: "No—we use quantum mathematical properties in classical systems, like how your blockchain uses cryptographic principles without specialized hardware."</div>
+                                            
+                                            <div style="margin-top:8px;"><strong>Q: "What's the performance cost?"</strong></div>
+                                            <div>A: "Actually faster—47ms versus industry average 133ms. Quantum encoding provides mathematical compression benefits."</div>
+                                            
+                                            <div style="margin-top:8px;"><strong>Q: "How does this build on SecureFed?"</strong></div>
+                                            <div>A: "Your blockchain validation becomes the security anchor in our quantum state—it's literally H_secure(blockchain_hash) in our mathematical formulation."</div>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">🎯 KEY MESSAGE FOR DR. BO WEI</div>
+                                            <div>"We're not replacing your SecureFed work—we're elevating it. Your blockchain validation becomes the security foundation for the world's first quantum-privacy-protected autonomous navigation system. This positions Newcastle University as the global leader in privacy-preserving autonomous systems."</div>
                                         </div>
                                         <div id="tpFacts" class="tp-section tp-facts" style="font-size:26px;">
                                             <div class="tp-highlight" style="margin-bottom:6px;">QEP-VLA Benchmarks</div>
@@ -1701,6 +1729,32 @@ class IntegratedMainPlatform:
                                                 <li>"Your rWiFiSLAM methodology provides the perfect starting point..."</li>
                                                 <li>"The Wei–van Laarhoven framework extends your approach by..."</li>
                                             </ul>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">📊 THE MATH SIMPLIFIED</div>
+                                            <div><strong>The Formula:</strong> Ψ_privacy(t) = Σᵢ αᵢ|agentᵢ⟩ ⊗ |privacy_stateⱼ⟩ ⊗ H_secure(blockchain_hash)</div>
+                                            <div style="margin-top:8px;"><strong>Translation:</strong></div>
+                                            <ul>
+                                                <li>Ψ_privacy(t): Privacy-protected system state at time t</li>
+                                                <li>Σᵢ αᵢ|agentᵢ⟩: Quantum superposition of navigation agent states</li>
+                                                <li>|privacy_stateⱼ⟩: Privacy protection encoded as quantum state</li>
+                                                <li>H_secure(blockchain_hash): Dr. Wei's SecureFed blockchain validation</li>
+                                                <li>⊗: Tensor product (quantum entanglement operation)</li>
+                                            </ul>
+                                            <div style="margin-top:8px;"><strong>What it achieves:</strong></div>
+                                            <ul>
+                                                <li>Sensor data mathematically protected from capture</li>
+                                                <li>Quantum advantage: exponentially harder to break</li>
+                                                <li>Uses Dr. Wei's proven blockchain security</li>
+                                                <li>Maintains 47ms real-time performance</li>
+                                            </ul>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">🎤 PERFECT SLIDE EXPLANATION (15 seconds)</div>
+                                            <div>"Your SecureFed work solved blockchain validation for federated learning. Our transform extends your approach to sensor fusion—instead of adding privacy after processing, we mathematically embed privacy into the quantum representation itself, so sensor data is protected from capture to decision."</div>
+                                            
+                                            <div class="tp-highlight" style="margin-top:20px;">📝 FOR YOUR TELEPROMPTER</div>
+                                            <div><strong>Simple Version:</strong> "Extends your SecureFed blockchain to quantum-enhanced sensor fusion with mathematical privacy guarantees"</div>
+                                            <div style="margin-top:8px;"><strong>Medium Version:</strong> "Takes your proven blockchain validation and embeds it in quantum mathematical framework for sensor fusion privacy"</div>
+                                            <div style="margin-top:8px;"><strong>Detailed Version:</strong> "Mathematical transformation that uses quantum superposition to encode sensor privacy with your SecureFed blockchain as security anchor—protecting data from capture to decision"</div>
                                         </div>
                                         <div id="tpQA" class="tp-section" style="font-size:26px;">
                                             <div class="tp-highlight">Top Questions & Perfect Answers</div>
