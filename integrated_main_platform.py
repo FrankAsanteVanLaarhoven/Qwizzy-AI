@@ -58,13 +58,24 @@ class IntegratedMainPlatform:
         }
         
         # Deployment environment flags
-        self.is_cloud = os.getenv('CLOUD_DEPLOYMENT', '0') == '1'
+        self.is_cloud = (
+            os.getenv('CLOUD_DEPLOYMENT', '0') == '1'
+            or os.getenv('RAILWAY_STATIC_URL') is not None
+            or os.getenv('RAILWAY_ENVIRONMENT') is not None
+        )
 
         # Audio processing
         self.audio_queue = queue.Queue()
         self.is_listening = False
         self.recognizer = sr.Recognizer() if (sr is not None and not self.is_cloud) else None
-        self.microphone = sr.Microphone() if (sr is not None and not self.is_cloud) else None
+        # Only construct Microphone if SpeechRecognition and PyAudio are available
+        if sr is not None and not self.is_cloud and pyaudio is not None:
+            try:
+                self.microphone = sr.Microphone()
+            except Exception:
+                self.microphone = None
+        else:
+            self.microphone = None
         
         # Current conversation state
         self.current_question = ""
