@@ -1,3 +1,5 @@
+import os
+os.environ.setdefault("CLOUD_DEPLOYMENT", "1")
 from integrated_main_platform import IntegratedMainPlatform
 
 platform = IntegratedMainPlatform()
