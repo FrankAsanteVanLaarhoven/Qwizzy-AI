@@ -9,6 +9,7 @@ if not os.getenv('PORT'):
 platform = IntegratedMainPlatform()
 app = platform.app
 
+# Ensure the app is properly configured for Render
 if __name__ == "__main__":
     # For local runs with gunicorn fallback
     port = int(os.environ.get('PORT', 10000))

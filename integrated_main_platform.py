@@ -848,6 +848,7 @@ class IntegratedMainPlatform:
             border-radius: 15px 15px 0 0 !important;
             font-weight: bold;
             padding: 20px;
+            position: relative;
         }
 
         .btn-primary {
@@ -1180,36 +1181,34 @@ class IntegratedMainPlatform:
             overflow: hidden;
         }
 
-        .card-header {
-            position: relative;
-        }
-
         .sidebar-toggle {
-            position: absolute;
-            top: 50%;
-            right: -15px;
-            transform: translateY(-50%);
-            background: #ff6b35 !important;
+            position: absolute !important;
+            top: 50% !important;
+            right: -20px !important;
+            transform: translateY(-50%) !important;
+            background: #ff0000 !important;
             color: white !important;
-            border: 3px solid #fff !important;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            border: 4px solid #ffff00 !important;
+            border-radius: 50% !important;
+            width: 50px !important;
+            height: 50px !important;
             display: flex !important;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            font-size: 16px;
-            font-weight: bold;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            z-index: 9999 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.8) !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .sidebar-toggle:hover {
-            background: #e55a2b !important;
-            transform: translateY(-50%) scale(1.15);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+            background: #cc0000 !important;
+            transform: translateY(-50%) scale(1.2) !important;
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 1) !important;
         }
 
         .sidebar-panel.collapsed .sidebar-toggle {
