@@ -10,8 +10,14 @@ import threading
 import time
 import webbrowser
 import os
-import speech_recognition as sr
-import pyaudio
+try:
+    import speech_recognition as sr
+except Exception:
+    sr = None
+try:
+    import pyaudio
+except Exception:
+    pyaudio = None
 import queue
 import re
 import logging
@@ -51,11 +57,14 @@ class IntegratedMainPlatform:
             }
         }
         
+        # Deployment environment flags
+        self.is_cloud = os.getenv('CLOUD_DEPLOYMENT', '0') == '1'
+
         # Audio processing
         self.audio_queue = queue.Queue()
         self.is_listening = False
-        self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
+        self.recognizer = sr.Recognizer() if (sr is not None and not self.is_cloud) else None
+        self.microphone = sr.Microphone() if (sr is not None and not self.is_cloud) else None
         
         # Current conversation state
         self.current_question = ""
@@ -261,6 +270,14 @@ class IntegratedMainPlatform:
                 'ASsJTYQAAAAASUVORK5CYII='
             )
             return base64.b64decode(png_b64), 200, {'Content-Type': 'image/png'}
+
+        @self.app.route('/health')
+        def health():
+            return jsonify({
+                'status': 'ok',
+                'is_listening': self.is_listening,
+                'cloud': self.is_cloud
+            }), 200
             
         @self.app.route('/api/references')
         def list_references():
@@ -383,13 +400,21 @@ class IntegratedMainPlatform:
             """Start the teleprompter listening"""
             if not self.is_listening:
                 self.is_listening = True
-                # Start audio listening in background thread
-                threading.Thread(target=self.audio_listening_loop, daemon=True).start()
-                return jsonify({
-                    'success': True,
-                    'message': 'Teleprompter listening started',
-                    'is_listening': True
-                })
+                # In cloud mode or when microphone is unavailable, do not start server-side audio
+                if self.is_cloud or self.microphone is None:
+                    return jsonify({
+                        'success': True,
+                        'message': 'Teleprompter listening simulated in cloud mode',
+                        'is_listening': True
+                    })
+                else:
+                    # Start audio listening in background thread
+                    threading.Thread(target=self.audio_listening_loop, daemon=True).start()
+                    return jsonify({
+                        'success': True,
+                        'message': 'Teleprompter listening started',
+                        'is_listening': True
+                    })
             else:
                 return jsonify({
                     'success': False,
@@ -409,6 +434,9 @@ class IntegratedMainPlatform:
     def audio_listening_loop(self):
         """OPTIMIZED audio listening loop for instant responses"""
         logger.info("🚀 Starting OPTIMIZED teleprompter audio listening loop")
+        if self.microphone is None:
+            logger.info("Cloud mode or microphone unavailable; skipping server-side audio loop.")
+            return
         
         try:
             # Request microphone permission explicitly
