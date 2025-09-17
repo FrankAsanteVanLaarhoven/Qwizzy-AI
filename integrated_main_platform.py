@@ -752,7 +752,15 @@ class IntegratedMainPlatform:
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 30px;
-            text-align: center;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: left;
         }
 
         .header h1 {
@@ -1110,6 +1118,53 @@ class IntegratedMainPlatform:
             border-radius: 8px;
         }
 
+        /* Instant Suggestions Styles */
+        .instant-suggestions {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .suggestions-header h5 {
+            color: #00ff88;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .suggestions-content {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .suggestion-item strong {
+            color: #00ff88;
+        }
+
+        .suggestion-answer {
+            color: #e6e6e6;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
         /* Countdown Clock Styles */
         .countdown-container {
             position: absolute;
@@ -1223,11 +1278,13 @@ class IntegratedMainPlatform:
     <div class="main-container">
         <!-- Header -->
         <div class="header">
-            <div class="brand">
-                <img class="logo" src="/static/images/app-icon.png" alt="Logo">
-                <h1><i class="fas fa-brain"></i> Interview Intelligence Platform</h1>
+            <div class="header-content">
+                <div class="brand">
+                    <img class="logo" src="/static/images/app-icon.png" alt="Logo">
+                    <h1><i class="fas fa-brain"></i> Interview Intelligence Platform</h1>
+                </div>
+                <p>Real-time Company Research • Avatar Mock Interviews • Live Teleprompter</p>
             </div>
-            <p>Real-time Company Research • Avatar Mock Interviews • Live Teleprompter</p>
             <!-- Countdown Clock -->
             <div class="countdown-container">
                 <div class="countdown-display" id="countdownDisplay">00:00:00</div>
@@ -1314,7 +1371,7 @@ class IntegratedMainPlatform:
                                     </div>
                                     <div class="mb-3">
                                         <label for="companyName" class="form-label">University/Entity Name:</label>
-                                        <input type="text" class="form-control" id="companyName" placeholder="Enter university name..." required>
+                                        <input type="text" class="form-control" id="companyName" placeholder="Enter university name..." value="Newcastle University" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100">
                                         <i class="fas fa-search"></i> Start Comprehensive Research
@@ -1412,7 +1469,15 @@ class IntegratedMainPlatform:
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="stealthMode" checked>
                                         <label class="form-check-label" for="stealthMode">
-                                            Stealth Mode
+                                            Stealth Mode (Background Listening Active)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="instantSuggestions" checked>
+                                        <label class="form-check-label" for="instantSuggestions">
+                                            Instant Answer Suggestions
                                         </label>
                                     </div>
                                 </div>
@@ -1437,6 +1502,19 @@ class IntegratedMainPlatform:
                                 <i class="fas fa-broadcast-tower"></i> Live Interview Assistance
                             </div>
                             <div class="card-body">
+                                <!-- Instant Suggestions Display -->
+                                <div class="instant-suggestions" id="instantSuggestionsDisplay" style="display: none;">
+                                    <div class="suggestions-header">
+                                        <h5><i class="fas fa-lightbulb"></i> Instant Answer Suggestions</h5>
+                                        <button class="btn btn-sm btn-outline-light" id="toggleSuggestions">Hide</button>
+                                    </div>
+                                    <div class="suggestions-content" id="suggestionsContent">
+                                        <div class="suggestion-item">
+                                            <strong>Q:</strong> Tell me about yourself
+                                            <div class="suggestion-answer">I'm Frank van Laarhoven, an AI/ML researcher with an MSc in AI and extensive experience in academic collaboration...</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="teleprompter-display" id="teleprompterDisplay">
                                     <div class="tp-toolbar">
                                         <button class="tp-btn" id="tpCoreBtn">Core (1)</button>
@@ -1620,6 +1698,10 @@ class IntegratedMainPlatform:
         let countdownInterval = null;
         let countdownTime = 0;
         let isCountdownRunning = false;
+        
+        // Instant suggestions variables
+        let instantSuggestionsEnabled = true;
+        let suggestionsDisplay = null;
 
         // Teleprompter navigation helpers
         function tpShow(sectionId) {
@@ -1785,6 +1867,73 @@ class IntegratedMainPlatform:
                         setCountdown();
                     }
                 });
+            });
+        }
+
+        // Instant suggestions functions
+        function toggleInstantSuggestions() {
+            instantSuggestionsEnabled = !instantSuggestionsEnabled;
+            const checkbox = document.getElementById('instantSuggestions');
+            if (checkbox) checkbox.checked = instantSuggestionsEnabled;
+            
+            if (instantSuggestionsEnabled) {
+                showInstantSuggestions();
+                updateStatus('Instant suggestions enabled');
+            } else {
+                hideInstantSuggestions();
+                updateStatus('Instant suggestions disabled');
+            }
+        }
+
+        function showInstantSuggestions() {
+            suggestionsDisplay = document.getElementById('instantSuggestionsDisplay');
+            if (suggestionsDisplay) {
+                suggestionsDisplay.style.display = 'block';
+            }
+        }
+
+        function hideInstantSuggestions() {
+            suggestionsDisplay = document.getElementById('instantSuggestionsDisplay');
+            if (suggestionsDisplay) {
+                suggestionsDisplay.style.display = 'none';
+            }
+        }
+
+        function addInstantSuggestion(question, answer) {
+            if (!instantSuggestionsEnabled) return;
+            
+            const suggestionsContent = document.getElementById('suggestionsContent');
+            if (suggestionsContent) {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                suggestionItem.innerHTML = `
+                    <strong>Q:</strong> ${question}
+                    <div class="suggestion-answer">${answer}</div>
+                `;
+                suggestionsContent.insertBefore(suggestionItem, suggestionsContent.firstChild);
+                
+                // Keep only last 5 suggestions
+                const items = suggestionsContent.querySelectorAll('.suggestion-item');
+                if (items.length > 5) {
+                    items[items.length - 1].remove();
+                }
+            }
+        }
+
+        function bindInstantSuggestionsControls() {
+            document.getElementById('instantSuggestions')?.addEventListener('change', toggleInstantSuggestions);
+            document.getElementById('toggleSuggestions')?.addEventListener('click', () => {
+                const display = document.getElementById('instantSuggestionsDisplay');
+                const button = document.getElementById('toggleSuggestions');
+                if (display && button) {
+                    if (display.style.display === 'none') {
+                        display.style.display = 'block';
+                        button.textContent = 'Hide';
+                    } else {
+                        display.style.display = 'none';
+                        button.textContent = 'Show';
+                    }
+                }
             });
         }
 
@@ -2046,6 +2195,11 @@ class IntegratedMainPlatform:
                         <div class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</div>
                     </div>
                 `;
+                
+                // Add to instant suggestions if enabled
+                if (instantSuggestionsEnabled && data.question && data.response) {
+                    addInstantSuggestion(data.question, data.response);
+                }
             }
 
             // Instant section switching based on keywords
@@ -2204,7 +2358,9 @@ class IntegratedMainPlatform:
             tpLoadFont();
             bindTeleprompterControls();
             bindCountdownControls();
+            bindInstantSuggestionsControls();
             updateCountdownDisplay(); // Initialize countdown display
+            showInstantSuggestions(); // Show instant suggestions by default
             document.getElementById('tpCoreBtn')?.addEventListener('click', () => tpShow('tpCore'));
             document.getElementById('tpFactsBtn')?.addEventListener('click', () => tpShow('tpFacts'));
             document.getElementById('tpEmergencyBtn')?.addEventListener('click', () => tpShow('tpEmergency'));
