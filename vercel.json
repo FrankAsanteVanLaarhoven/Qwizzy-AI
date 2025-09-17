@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "https://qwizzy-backend.onrender.com/api/$1" },
+    { "src": "/(.*)", "dest": "/public/index.html" }
+  ]
+}
+
+
