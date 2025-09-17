@@ -1,0 +1,28 @@
+# Desktop Interview Intelligence Platform Requirements
+# Core dependencies for the standalone desktop application
+
+# Audio processing
+SpeechRecognition==3.10.0
+pyaudio==0.2.11
+
+# Web framework
+flask==2.3.3
+
+# Image processing and QR codes
+Pillow==10.0.1
+qrcode==7.4.2
+
+# HTTP requests
+requests==2.31.0
+
+# GUI framework (tkinter is built-in with Python)
+# No additional GUI dependencies needed
+
+# Optional: Enhanced AI capabilities
+# transformers==4.33.2
+# torch==2.0.1
+# numpy==1.24.3
+
+# Development and testing
+# pytest==7.4.0
+# pytest-cov==4.1.0
