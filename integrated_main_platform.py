@@ -1951,7 +1951,12 @@ class IntegratedMainPlatform:
             document.getElementById('tpChecklistBtn')?.addEventListener('click', () => tpShow('tpChecklist'));
             document.getElementById('tpSmallerBtn')?.addEventListener('click', () => tpSetFont(-2));
             document.getElementById('tpBiggerBtn')?.addEventListener('click', () => tpSetFont(+2));
-            document.getElementById('tpScrollBtn')?.addEventListener('click', tpToggleScroll);
+            // Disable auto-scroll feature per request
+            const scrollBtn = document.getElementById('tpScrollBtn');
+            if (scrollBtn) {
+                scrollBtn.textContent = 'Auto-Scroll Disabled';
+                scrollBtn.setAttribute('disabled', 'disabled');
+            }
             document.getElementById('tpNeonBtn')?.addEventListener('click', () => {
                 const cont = document.body;
                 cont.classList.toggle('neon-global');
@@ -1984,21 +1989,11 @@ class IntegratedMainPlatform:
                 }
                 else if (e.key === '+') tpSetFont(+2);
                 else if (e.key === '-') tpSetFont(-2);
-                else if (e.code === 'Space') { e.preventDefault(); tpToggleScroll(); }
             });
             // Stop auto-scroll on user interaction (click, wheel, touch, key)
-            const tpContainer = document.getElementById('teleprompterDisplay');
-            const stopAutoOnInteract = () => {
-                if (tpAutoScroll) {
-                    tpAutoScroll = false;
-                    if (tpScrollInterval) { clearInterval(tpScrollInterval); tpScrollInterval = null; }
-                    const btn = document.getElementById('tpScrollBtn');
-                    if (btn) btn.textContent = 'Auto-Scroll (Space)';
-                }
-            };
-            ['mousedown','wheel','touchstart','keydown'].forEach(evt => {
-                tpContainer?.addEventListener(evt, stopAutoOnInteract, { passive: true });
-            });
+            // Ensure any auto-scroll is fully disabled and cleared
+            if (tpScrollInterval) { clearInterval(tpScrollInterval); tpScrollInterval = null; }
+            tpAutoScroll = false;
 
             // restore neon mode if set
             if (localStorage.getItem('tpNeon') === '1') document.body.classList.add('neon-global');
