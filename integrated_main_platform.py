@@ -1180,29 +1180,36 @@ class IntegratedMainPlatform:
             overflow: hidden;
         }
 
+        .card-header {
+            position: relative;
+        }
+
         .sidebar-toggle {
             position: absolute;
             top: 50%;
             right: -15px;
             transform: translateY(-50%);
-            background: var(--secondary-color);
-            color: white;
-            border: none;
+            background: #ff6b35 !important;
+            color: white !important;
+            border: 3px solid #fff !important;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
+            width: 40px;
+            height: 40px;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 10;
+            z-index: 1000;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .sidebar-toggle:hover {
-            background: var(--primary-color);
-            transform: translateY(-50%) scale(1.1);
+            background: #e55a2b !important;
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
         }
 
         .sidebar-panel.collapsed .sidebar-toggle {
