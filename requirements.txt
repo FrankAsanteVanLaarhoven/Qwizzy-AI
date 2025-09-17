@@ -20,5 +20,5 @@ gunicorn>=21.2.0
 qrcode>=7.4.2
 pillow>=10.0.0
 SpeechRecognition>=3.10.0
-# Only install PyAudio on macOS/Windows; skip on Linux (Railway)
+# Only install PyAudio on macOS/Windows; skip on Linux (Render/Railway)
 pyaudio>=0.2.14; platform_system == "Darwin" or platform_system == "Windows"
