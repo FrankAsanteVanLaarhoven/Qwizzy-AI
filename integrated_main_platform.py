@@ -188,13 +188,13 @@ class IntegratedMainPlatform:
                     'Builds on rWiFiSLAM loop-closure concepts by adding quantum-enhanced navigation and '
                     'privacy-preserving telemetry; can use WiFi RTT observations as auxiliary constraints '
                     'alongside quantum magnetometer/VIO fusion.',
-                    'Wei's removal of AP-location requirements complements QEP-VLA's deployment in dynamic '
+                    'Wei\'s removal of AP-location requirements complements QEP-VLA\'s deployment in dynamic '
                     'environments with minimal pre-mapping; both emphasize robust localisation under uncertainty.'
                 ],
                 'talk_tracks': [
-                    'How rWiFiSLAM's RTT observation clustering inspires privacy-preserving loop closures '
+                    'How rWiFiSLAM\'s RTT observation clustering inspires privacy-preserving loop closures '
                     'without sensitive map disclosure.',
-                    'Why differential privacy alone is insufficient for VLA; QEP-VLA's hybrid quantum-classical stack.',
+                    'Why differential privacy alone is insufficient for VLA; QEP-VLA\'s hybrid quantum-classical stack.',
                     'Operational trade-offs: 50ms real-time budget via optimized PQ crypto and secure tensor ops.'
                 ]
             }
