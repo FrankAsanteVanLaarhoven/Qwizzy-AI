@@ -26,7 +26,7 @@ import qrcode
 from PIL import Image
 import base64
 import io
-from flask import Flask, render_template_string, jsonify, request
+from flask import Flask, render_template_string, jsonify, request, redirect, url_for
 try:
     from flask_cors import CORS  # type: ignore
 except Exception:
@@ -188,13 +188,13 @@ class IntegratedMainPlatform:
                     'Builds on rWiFiSLAM loop-closure concepts by adding quantum-enhanced navigation and '
                     'privacy-preserving telemetry; can use WiFi RTT observations as auxiliary constraints '
                     'alongside quantum magnetometer/VIO fusion.',
-                    'Wei’s removal of AP-location requirements complements QEP-VLA’s deployment in dynamic '
+                    'Wei's removal of AP-location requirements complements QEP-VLA's deployment in dynamic '
                     'environments with minimal pre-mapping; both emphasize robust localisation under uncertainty.'
                 ],
                 'talk_tracks': [
-                    'How rWiFiSLAM’s RTT observation clustering inspires privacy-preserving loop closures '
+                    'How rWiFiSLAM's RTT observation clustering inspires privacy-preserving loop closures '
                     'without sensitive map disclosure.',
-                    'Why differential privacy alone is insufficient for VLA; QEP-VLA’s hybrid quantum-classical stack.',
+                    'Why differential privacy alone is insufficient for VLA; QEP-VLA's hybrid quantum-classical stack.',
                     'Operational trade-offs: 50ms real-time budget via optimized PQ crypto and secure tensor ops.'
                 ]
             }
@@ -275,12 +275,7 @@ class IntegratedMainPlatform:
         # Prevent favicon 404 noise in console
         @self.app.route('/favicon.ico')
         def favicon():
-            # 1x1 transparent PNG
-            png_b64 = (
-                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMA'
-                'ASsJTYQAAAAASUVORK5CYII='
-            )
-            return base64.b64decode(png_b64), 200, {'Content-Type': 'image/png'}
+            return redirect(url_for('static', filename='images/app-icon.png'))
 
         @self.app.route('/health')
         def health():
@@ -689,7 +684,7 @@ class IntegratedMainPlatform:
     <title>Interview Intelligence Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=">
+    <link rel="icon" type="image/png" href="/static/images/app-icon.png">
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -1101,13 +1096,29 @@ class IntegratedMainPlatform:
             color: #888;
             margin-top: 5px;
         }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .header .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="main-container">
         <!-- Header -->
         <div class="header">
-            <h1><i class="fas fa-brain"></i> Interview Intelligence Platform</h1>
+            <div class="brand">
+                <img class="logo" src="/static/images/app-icon.png" alt="Logo">
+                <h1><i class="fas fa-brain"></i> Interview Intelligence Platform</h1>
+            </div>
             <p>Real-time Company Research • Avatar Mock Interviews • Live Teleprompter</p>
         </div>
 
@@ -1358,9 +1369,9 @@ class IntegratedMainPlatform:
                                         <div id="tpEmergency" class="tp-section tp-emergency" style="font-size:26px;">
                                             <div class="tp-highlight" style="margin-bottom:6px;">Emergency Backup Answers</div>
                                             <ul>
-                                                <li>If Technology Fails: “I'm passionate about building on your proven SecureFed foundation...”</li>
-                                                <li>If Asked About Limitations: “Three honest limitations: quantum sensors, blockchain latency, complexity...”</li>
-                                                <li>If Lost: “The key insight is that your research provides the perfect starting point...”</li>
+                                                <li>If Technology Fails: "I'm passionate about building on your proven SecureFed foundation..."</li>
+                                                <li>If Asked About Limitations: "Three honest limitations: quantum sensors, blockchain latency, complexity..."</li>
+                                                <li>If Lost: "The key insight is that your research provides the perfect starting point..."</li>
                                             </ul>
                                         </div>
                                         <div id="tpOpening" class="tp-section" style="font-size:26px;">
@@ -1379,9 +1390,9 @@ class IntegratedMainPlatform:
                                             </ul>
                                             <div class="tp-highlight">Phrases</div>
                                             <ul>
-                                                <li>“Building on your proven SecureFed foundation...”</li>
-                                                <li>“Your rWiFiSLAM methodology provides the perfect starting point...”</li>
-                                                <li>“The Wei–van Laarhoven framework extends your approach by...”</li>
+                                                <li>"Building on your proven SecureFed foundation..."</li>
+                                                <li>"Your rWiFiSLAM methodology provides the perfect starting point..."</li>
+                                                <li>"The Wei–van Laarhoven framework extends your approach by..."</li>
                                             </ul>
                                         </div>
                                         <div id="tpQA" class="tp-section" style="font-size:26px;">
