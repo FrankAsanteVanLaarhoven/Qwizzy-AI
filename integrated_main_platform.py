@@ -1488,6 +1488,9 @@ class IntegratedMainPlatform:
             document.querySelectorAll('#tpSections .tp-section').forEach(el => el.classList.remove('active'));
             const el = document.getElementById(sectionId);
             if (el) el.classList.add('active');
+            // Ensure the beginning of the text is visible when switching sections
+            const cont = document.getElementById('teleprompterDisplay');
+            if (cont) cont.scrollTop = 0;
         }
 
         function tpSetFont(deltaPx) {
@@ -1514,7 +1517,7 @@ class IntegratedMainPlatform:
             if (tpAutoScroll) {
                 tpScrollInterval = setInterval(() => {
                     const cont = document.getElementById('teleprompterDisplay');
-                    if (cont) cont.scrollTop += 1;
+                    if (cont) cont.scrollTop = Math.min(cont.scrollTop + 1, cont.scrollHeight);
                 }, 30);
             }
         }
@@ -1793,8 +1796,10 @@ class IntegratedMainPlatform:
             } else if (q.includes('backup') || q.includes('limitations') || q.includes('fail')) {
                 tpShow('tpEmergency');
             }
-            // Smoothly keep the latest content visible
-            display.scrollTop = display.scrollHeight;
+            // Only auto-scroll when enabled; otherwise respect user's scroll position
+            if (tpAutoScroll) {
+                display.scrollTop = display.scrollHeight;
+            }
         }
 
         // Update conversation history
@@ -1981,6 +1986,20 @@ class IntegratedMainPlatform:
                 else if (e.key === '-') tpSetFont(-2);
                 else if (e.code === 'Space') { e.preventDefault(); tpToggleScroll(); }
             });
+            // Stop auto-scroll on user interaction (click, wheel, touch, key)
+            const tpContainer = document.getElementById('teleprompterDisplay');
+            const stopAutoOnInteract = () => {
+                if (tpAutoScroll) {
+                    tpAutoScroll = false;
+                    if (tpScrollInterval) { clearInterval(tpScrollInterval); tpScrollInterval = null; }
+                    const btn = document.getElementById('tpScrollBtn');
+                    if (btn) btn.textContent = 'Auto-Scroll (Space)';
+                }
+            };
+            ['mousedown','wheel','touchstart','keydown'].forEach(evt => {
+                tpContainer?.addEventListener(evt, stopAutoOnInteract, { passive: true });
+            });
+
             // restore neon mode if set
             if (localStorage.getItem('tpNeon') === '1') document.body.classList.add('neon-global');
         });
