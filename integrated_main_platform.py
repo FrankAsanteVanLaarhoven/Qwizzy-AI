@@ -1109,6 +1109,114 @@ class IntegratedMainPlatform:
             height: 40px;
             border-radius: 8px;
         }
+
+        /* Countdown Clock Styles */
+        .countdown-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+            text-align: center;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .countdown-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .countdown-controls input {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .countdown-controls input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+        }
+
+        .countdown-controls span {
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .countdown-btn {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 2px;
+        }
+
+        .countdown-btn:hover {
+            background: linear-gradient(135deg, #00cc6a, #00ff88);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+        }
+
+        .countdown-btn:active {
+            transform: translateY(0);
+        }
+
+        .countdown-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .countdown-container {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                width: 100%;
+            }
+            
+            .countdown-display {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .countdown-controls input {
+                width: 60px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1120,6 +1228,20 @@ class IntegratedMainPlatform:
                 <h1><i class="fas fa-brain"></i> Interview Intelligence Platform</h1>
             </div>
             <p>Real-time Company Research • Avatar Mock Interviews • Live Teleprompter</p>
+            <!-- Countdown Clock -->
+            <div class="countdown-container">
+                <div class="countdown-display" id="countdownDisplay">00:00:00</div>
+                <div class="countdown-controls">
+                    <input type="number" id="countdownHours" placeholder="H" min="0" max="23" value="0">
+                    <span>:</span>
+                    <input type="number" id="countdownMinutes" placeholder="M" min="0" max="59" value="30">
+                    <span>:</span>
+                    <input type="number" id="countdownSeconds" placeholder="S" min="0" max="59" value="0">
+                    <button id="setCountdownBtn" class="countdown-btn">Set</button>
+                    <button id="startCountdownBtn" class="countdown-btn">Start</button>
+                    <button id="resetCountdownBtn" class="countdown-btn">Reset</button>
+                </div>
+            </div>
         </div>
 
         <!-- Status Bar -->
@@ -1493,6 +1615,11 @@ class IntegratedMainPlatform:
         let lastUpdate = null;
         let tpAutoScroll = false;
         let tpScrollInterval = null;
+        
+        // Countdown clock variables
+        let countdownInterval = null;
+        let countdownTime = 0;
+        let isCountdownRunning = false;
 
         // Teleprompter navigation helpers
         function tpShow(sectionId) {
@@ -1536,6 +1663,129 @@ class IntegratedMainPlatform:
         // Update status bar
         function updateStatus(message) {
             document.getElementById('status-text').textContent = message;
+        }
+
+        // Countdown clock functions
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateCountdownDisplay() {
+            const display = document.getElementById('countdownDisplay');
+            if (display) {
+                display.textContent = formatTime(countdownTime);
+                
+                // Change color based on remaining time
+                if (countdownTime <= 60) {
+                    display.style.color = '#ff4444'; // Red for last minute
+                    display.style.textShadow = '0 0 10px rgba(255, 68, 68, 0.8)';
+                } else if (countdownTime <= 300) {
+                    display.style.color = '#ffaa00'; // Orange for last 5 minutes
+                    display.style.textShadow = '0 0 10px rgba(255, 170, 0, 0.8)';
+                } else {
+                    display.style.color = '#00ff88'; // Green for normal time
+                    display.style.textShadow = '0 0 10px rgba(0, 255, 136, 0.5)';
+                }
+            }
+        }
+
+        function startCountdown() {
+            if (countdownTime <= 0) {
+                alert('Please set a countdown time first!');
+                return;
+            }
+            
+            if (isCountdownRunning) {
+                return;
+            }
+            
+            isCountdownRunning = true;
+            const startBtn = document.getElementById('startCountdownBtn');
+            const setBtn = document.getElementById('setCountdownBtn');
+            
+            if (startBtn) startBtn.textContent = 'Pause';
+            if (setBtn) setBtn.disabled = true;
+            
+            countdownInterval = setInterval(() => {
+                countdownTime--;
+                updateCountdownDisplay();
+                
+                if (countdownTime <= 0) {
+                    stopCountdown();
+                    // Play alert sound or show notification
+                    alert('⏰ Countdown finished!');
+                    updateStatus('Countdown finished!');
+                }
+            }, 1000);
+            
+            updateStatus('Countdown started');
+        }
+
+        function stopCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            
+            isCountdownRunning = false;
+            const startBtn = document.getElementById('startCountdownBtn');
+            const setBtn = document.getElementById('setCountdownBtn');
+            
+            if (startBtn) startBtn.textContent = 'Start';
+            if (setBtn) setBtn.disabled = false;
+        }
+
+        function resetCountdown() {
+            stopCountdown();
+            countdownTime = 0;
+            updateCountdownDisplay();
+            
+            // Reset input fields
+            document.getElementById('countdownHours').value = 0;
+            document.getElementById('countdownMinutes').value = 30;
+            document.getElementById('countdownSeconds').value = 0;
+            
+            updateStatus('Countdown reset');
+        }
+
+        function setCountdown() {
+            const hours = parseInt(document.getElementById('countdownHours').value) || 0;
+            const minutes = parseInt(document.getElementById('countdownMinutes').value) || 0;
+            const seconds = parseInt(document.getElementById('countdownSeconds').value) || 0;
+            
+            countdownTime = hours * 3600 + minutes * 60 + seconds;
+            
+            if (countdownTime <= 0) {
+                alert('Please enter a valid time!');
+                return;
+            }
+            
+            updateCountdownDisplay();
+            updateStatus(`Countdown set to ${formatTime(countdownTime)}`);
+        }
+
+        function bindCountdownControls() {
+            document.getElementById('setCountdownBtn')?.addEventListener('click', setCountdown);
+            document.getElementById('startCountdownBtn')?.addEventListener('click', () => {
+                if (isCountdownRunning) {
+                    stopCountdown();
+                } else {
+                    startCountdown();
+                }
+            });
+            document.getElementById('resetCountdownBtn')?.addEventListener('click', resetCountdown);
+            
+            // Allow Enter key to set countdown
+            ['countdownHours', 'countdownMinutes', 'countdownSeconds'].forEach(id => {
+                document.getElementById(id)?.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        setCountdown();
+                    }
+                });
+            });
         }
 
         // Helpers for button state and status indicator
@@ -1953,6 +2203,8 @@ class IntegratedMainPlatform:
             refreshBackendStatus();
             tpLoadFont();
             bindTeleprompterControls();
+            bindCountdownControls();
+            updateCountdownDisplay(); // Initialize countdown display
             document.getElementById('tpCoreBtn')?.addEventListener('click', () => tpShow('tpCore'));
             document.getElementById('tpFactsBtn')?.addEventListener('click', () => tpShow('tpFacts'));
             document.getElementById('tpEmergencyBtn')?.addEventListener('click', () => tpShow('tpEmergency'));
